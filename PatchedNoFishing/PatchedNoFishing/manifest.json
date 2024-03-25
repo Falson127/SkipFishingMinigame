@@ -1,0 +1,9 @@
+{
+  "Name": "Skip Fishing Minigame",
+  "Author": "Falson",
+  "Version": "1.0.0",
+  "UniqueID": "1240318924508",
+  "Description": "Fishing Bad",
+  "MinimumApiLevel": "3.0.0",
+  "EntryDll": "PatchedNoFishing.dll"
+}
