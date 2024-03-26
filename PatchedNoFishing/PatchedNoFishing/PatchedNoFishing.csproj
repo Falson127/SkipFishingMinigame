@@ -55,6 +55,7 @@
         <PackageReference Include="Pathoschild.Stardew.ModBuildConfig" Version="4.1.1"/>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="IGenericModConfigMenuApi.cs" />
         <Compile Include="ModEntry.cs"/>
         <Compile Include="ModConfig.cs"/>
     </ItemGroup>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime;
 using System.Collections.Generic;
+using GenericModConfigMenu;
 using Microsoft.Xna.Framework;
 using Netcode;
 using StardewValley;
@@ -30,6 +31,42 @@ namespace PatchedNoFishing
         this.Random = new Random();
         helper.Events.Display.MenuChanged += new EventHandler<MenuChangedEventArgs>(this.Display_MenuChanged);
         helper.Events.Input.ButtonPressed += new EventHandler<ButtonPressedEventArgs>(this.Input_ButtonPressed);
+        
+        var configMenu = this.Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
+        if (configMenu is null)
+        {
+          this.Monitor.Log("Not Registering Mod with API", (LogLevel)2);
+        }
+        else
+        {
+          this.Monitor.Log("Registering Mod with API", (LogLevel)2);
+          configMenu.Register(mod: this.ModManifest, reset: ()=> this.Config = new ModConfig(),
+            save: ()=> this.Helper.WriteConfig(this.Config));
+          configMenu.AddNumberOption(
+            mod:this.ModManifest,
+            name: ()=>"Perfect Catch Chance (0-100)",
+            tooltip:()=> "Percent change for the catch to be considered 'perfect'",
+            getValue: ()=> Config.PerfectCatchChance,
+            setValue: value => Config.PerfectCatchChance = value);
+          configMenu.AddBoolOption(
+            mod:this.ModManifest,
+            name: ()=> "Auto Hook",
+            tooltip: ()=> "Whether the 'Auto-Hook' enchant should be applied to fishing rods",
+            getValue: ()=> Config.IsAutoHook,
+            setValue: value => Config.IsAutoHook = value);
+          configMenu.AddBoolOption(
+            mod:this.ModManifest,
+            name: ()=> "Ignore Treasure Chests",
+            tooltip: ()=> "Check this box to prevent treasure chest rewards from fishing",
+            getValue: ()=> Config.IsIgnoreTreasureChests,
+            setValue: value => Config.IsIgnoreTreasureChests = value);
+          configMenu.AddNumberOption(
+            mod: this.ModManifest,
+            name: ()=> "Required Catches",
+            tooltip: ()=> "Number of fish that must be caught before the minigame can be skipped",
+            getValue: ()=> Config.MinimumCatchesRequired,
+            setValue: value => Config.MinimumCatchesRequired = value);
+        }
       }
 
       private void Display_MenuChanged(object sender, MenuChangedEventArgs e)
